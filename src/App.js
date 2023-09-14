@@ -1,23 +1,35 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
+  const requestUrl =
+    'https://api.unsplash.com/search/photos?query=dogs&client_id=HX3wJPX0SDBEltHEnd754XINQRAX7lFAeEFNb2cCn5Y';
+
+  const [imageSrc, setImageSrc] = useState('');
+
+  const getNewImage = async () => {
+    const randomNumber = Math.floor(Math.random() * 10);
+
+    try {
+      const response = await fetch(requestUrl);
+      const data = await response.json();
+      const allImages = data.results[randomNumber];
+      setImageSrc(allImages.urls.regular);
+    } catch (error) {
+      console.error('Error fetching image:', error);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="display">
+      <div className="fetchImagesWrapper">
+        <button className="getImagesButton" onClick={getNewImage}>
+          Click Here to get Pictures of Dogs
+        </button>
+      </div>
+      <div className="imageDisplayWrapper">
+        <img className="imageToDisplay" src={imageSrc} alt="Random Dog" />
+      </div>
     </div>
   );
 }
